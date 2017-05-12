@@ -4,10 +4,10 @@ import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
 public class Movement {
-    private static final float ROSS_X = 200;
-    private static final float ROSS_Y = 250;
-    private static final float NATHAN_X = 800;
-    private static final float NATHAN_Y = 1000;
+    public static final float ROSS_X = 200;
+    public static final float ROSS_Y = 250;
+    public static final float NATHAN_X = 800;
+    public static final float NATHAN_Y = 1000;
 
     private static float fingerX;
     private static float fingerY;
@@ -38,12 +38,6 @@ public class Movement {
     private static void setPositions(MySurfaceView msv) {
         msv.canvas.drawBitmap(msv.ross, rossXMid, rossYMid, null);
         msv.canvas.drawBitmap(nathanToUse, nathanX, nathanY, null);
-    }
-
-    public static boolean intro(MySurfaceView msv) {
-
-
-        return false;
     }
 
     public static void updateTouchPoints(MotionEvent event) {
@@ -77,7 +71,7 @@ public class Movement {
         float xDiff = Movement.rossXMid - Movement.nathanX;
         float yDiff = Movement.rossYMid - Movement.nathanY;
 
-        return (xDiff < 100 && xDiff > -100) && (yDiff < 200 && yDiff > -200);
+        return (xDiff < 80 && xDiff > -80) && (yDiff < 180 && yDiff > -180);
     }
 
     private static void updateRossPosition(MySurfaceView msv) {

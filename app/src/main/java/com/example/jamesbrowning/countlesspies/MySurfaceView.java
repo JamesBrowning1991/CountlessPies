@@ -18,7 +18,7 @@ public class MySurfaceView extends SurfaceView implements Runnable {
     Bitmap ross;
     Bitmap nathan_left;
     Bitmap nathan_right;
-    boolean doIntro;
+    public boolean doIntro;
 
     int lives = 5;
     boolean gameOver;
@@ -45,13 +45,14 @@ public class MySurfaceView extends SurfaceView implements Runnable {
             canvas = surfaceHolder.lockCanvas();
             this.setBackground();
             if (doIntro) {
-                doIntro = Movement.intro(this);
+                doIntro = IntroMovement.doIntro(this);
             }
-
-            isGameOver();
-            Movement.updateMovement(this);
-            Movement.checkContactWithEnemy(this);
-            drawScore();
+            else {
+                isGameOver();
+                Movement.updateMovement(this);
+                Movement.checkContactWithEnemy(this);
+                drawScore();
+            }
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
     }
