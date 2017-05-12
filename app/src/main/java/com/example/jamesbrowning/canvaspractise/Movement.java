@@ -1,16 +1,20 @@
 package com.example.jamesbrowning.canvaspractise;
 
 import android.graphics.Bitmap;
-import android.os.Handler;
 import android.view.MotionEvent;
 
 public class Movement {
-    private static float fingerX = 400;
-    private static float fingerY = 400;
-    private static float rossX = 400;
-    private static float rossY = 400;
-    private static float rossXMid;
-    private static float rossYMid;
+    private static final float ROSS_X = 200;
+    private static final float ROSS_Y = 250;
+    private static final float NATHAN_X = 800;
+    private static final float NATHAN_Y = 1000;
+
+    private static float fingerX;
+    private static float fingerY;
+    private static float rossX;
+    private static float rossY;
+    public static float rossXMid;
+    public static float rossYMid;
 
     private static boolean preRossGreaterThanNathan_X;
     private static boolean preRossGreaterThanNathan_Y;
@@ -18,11 +22,29 @@ public class Movement {
     private static boolean rossGreaterThanNathan_Y;
 
     private static Bitmap nathanToUse;
-    private static float nathanX = 600;
-    private static float nathanY = 600;
+    public static float nathanX;
+    public static float nathanY;
     private static int delayNathanCounter = 0;
     private static int passedNathanRecentlyCounter = 0;
 
+    public static void setPositionValues() {
+        fingerX = fingerY = -1;
+        rossX = ROSS_X;
+        rossY = ROSS_Y;
+        nathanX = NATHAN_X;
+        nathanY = NATHAN_Y;
+    }
+
+    private static void setPositions(MySurfaceView msv) {
+        msv.canvas.drawBitmap(msv.ross, rossXMid, rossYMid, null);
+        msv.canvas.drawBitmap(nathanToUse, nathanX, nathanY, null);
+    }
+
+    public static boolean intro(MySurfaceView msv) {
+
+
+        return false;
+    }
 
     public static void updateTouchPoints(MotionEvent event) {
         fingerX = event.getX();
@@ -30,14 +52,32 @@ public class Movement {
     }
 
     public static void updateMovement(MySurfaceView msv) {
-        updateRossPosition(msv);
-        updateNathanPosition(msv);
-        checkIfRossHasPassedNathan();
+        if (!msv.gameOver) {
+            updateRossPosition(msv);
+            updateNathanPosition(msv);
+            setPositions(msv);
+            checkIfRossHasPassedNathan();
+        }
     }
 
     public static void stopMovingPlayer() {
         fingerX = -1;  // what happens if event.getX()when finger is not down
         fingerY = -1;
+    }
+
+    public static void checkContactWithEnemy(MySurfaceView msv) {
+        if (isThereContact(msv)) {
+            setPositionValues();
+            setPositions(msv);
+            msv.lives = msv.lives > 0 ? msv.lives-1 : msv.lives;
+        }
+    }
+
+    private static boolean isThereContact(MySurfaceView msv) {
+        float xDiff = Movement.rossXMid - Movement.nathanX;
+        float yDiff = Movement.rossYMid - Movement.nathanY;
+
+        return (xDiff < 100 && xDiff > -100) && (yDiff < 200 && yDiff > -200);
     }
 
     private static void updateRossPosition(MySurfaceView msv) {
@@ -68,8 +108,6 @@ public class Movement {
 
         rossXMid = newRossX - (msv.ross.getWidth()/2);
         rossYMid = newRossY - (msv.ross.getHeight()/2);
-
-        msv.canvas.drawBitmap(msv.ross, rossXMid, rossYMid, null);
     }
 
     private static void updateNathanPosition(MySurfaceView msv) {
@@ -100,8 +138,6 @@ public class Movement {
                 subtractPassedNathanRecentlyCounter();
             }
         }
-
-        msv.canvas.drawBitmap(nathanToUse, nathanX, nathanY, null);
     }
 
     private static void subtractPassedNathanRecentlyCounter() {
@@ -122,7 +158,8 @@ public class Movement {
         else if (rossYMid < nathanY)
             rossGreaterThanNathan_Y = false;
 
-        if (rossGreaterThanNathan_X != preRossGreaterThanNathan_X || rossGreaterThanNathan_Y != preRossGreaterThanNathan_Y) {
+        if (rossGreaterThanNathan_X != preRossGreaterThanNathan_X ||
+                rossGreaterThanNathan_Y != preRossGreaterThanNathan_Y) {
             if (passedNathanRecentlyCounter == 0) {
                 delayNathanCounter = 50;
                 passedNathanRecentlyCounter = 150;
@@ -131,10 +168,6 @@ public class Movement {
 
         preRossGreaterThanNathan_X = rossGreaterThanNathan_X;
         preRossGreaterThanNathan_Y = rossGreaterThanNathan_Y;
-    }
-
-    private static void checkContact() {
-
     }
 
 }

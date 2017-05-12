@@ -38,6 +38,11 @@ public class GameplayActivity extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         msv.pause();
