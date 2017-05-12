@@ -1,4 +1,4 @@
-package com.example.jamesbrowning.canvaspractise;
+package com.example.jamesbrowning.countlesspies;
 
 import org.junit.Test;
 

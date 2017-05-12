@@ -1,4 +1,4 @@
-package com.example.jamesbrowning.canvaspractise;
+package com.example.jamesbrowning.countlesspies;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View;
 public class GameplayActivity extends Activity {
 
     MySurfaceView msv;
+    boolean sleepOnResume = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class GameplayActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        sleepOnResume = true;
         msv.pause();
     }
 
@@ -52,5 +54,17 @@ public class GameplayActivity extends Activity {
     protected void onResume() {
         super.onResume();
         msv.resume();
+        if (sleepOnResume) {
+            sleepForABit(1000);
+            sleepOnResume = false;
+        }
+    }
+
+    public void sleepForABit(int millisecondWait) {
+        try {
+            Thread.sleep(millisecondWait);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

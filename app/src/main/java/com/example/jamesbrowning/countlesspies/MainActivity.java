@@ -1,9 +1,8 @@
-package com.example.jamesbrowning.canvaspractise;
+package com.example.jamesbrowning.countlesspies;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
