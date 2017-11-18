@@ -3,41 +3,51 @@ package com.example.jamesbrowning.countlesspies;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
-public class Movement {
-    public static final float ROSS_X = 200;
-    public static final float ROSS_Y = 250;
-    public static final float NATHAN_X = 800;
-    public static final float NATHAN_Y = 1000;
+import static com.example.jamesbrowning.countlesspies.Positions.NATHAN_X;
+import static com.example.jamesbrowning.countlesspies.Positions.NATHAN_Y;
+import static com.example.jamesbrowning.countlesspies.Positions.ROSS_X;
+import static com.example.jamesbrowning.countlesspies.Positions.ROSS_Y;
+import static com.example.jamesbrowning.countlesspies.Positions.nathanX;
+import static com.example.jamesbrowning.countlesspies.Positions.nathanY;
+import static com.example.jamesbrowning.countlesspies.Positions.pie1X;
+import static com.example.jamesbrowning.countlesspies.Positions.pie1Y;
+import static com.example.jamesbrowning.countlesspies.Positions.rossX;
+import static com.example.jamesbrowning.countlesspies.Positions.rossXMid;
+import static com.example.jamesbrowning.countlesspies.Positions.rossY;
+import static com.example.jamesbrowning.countlesspies.Positions.rossYMid;
+import static com.example.jamesbrowning.countlesspies.Positions.setRandomPiePostion;
 
+public class Movement {
     private static float fingerX;
     private static float fingerY;
-    private static float rossX;
-    private static float rossY;
-    public static float rossXMid;
-    public static float rossYMid;
-
-    private static boolean preRossGreaterThanNathan_X;
-    private static boolean preRossGreaterThanNathan_Y;
-    private static boolean rossGreaterThanNathan_X;
-    private static boolean rossGreaterThanNathan_Y;
 
     private static Bitmap nathanToUse;
-    public static float nathanX;
-    public static float nathanY;
+
+    private static int rossXMoveSpeed = 12;
+    private static int rossYMoveSpeed = 16;
+
+    public static boolean preRossGreaterThanNathan_X;
+    public static boolean preRossGreaterThanNathan_Y;
+    public static boolean rossGreaterThanNathan_X;
+    public static boolean rossGreaterThanNathan_Y;
+
     private static int delayNathanCounter = 0;
     private static int passedNathanRecentlyCounter = 0;
 
-    public static void setPositionValues() {
-        fingerX = fingerY = -1;
+    public static void setPositionValues(MySurfaceView msv) {
+        Positions.setStartingPositions(msv);
         rossX = ROSS_X;
         rossY = ROSS_Y;
         nathanX = NATHAN_X;
         nathanY = NATHAN_Y;
+        setRandomPiePostion(msv);
+        fingerX = fingerY = -1;
     }
 
     private static void setPositions(MySurfaceView msv) {
         msv.canvas.drawBitmap(msv.ross, rossXMid, rossYMid, null);
         msv.canvas.drawBitmap(nathanToUse, nathanX, nathanY, null);
+        msv.canvas.drawBitmap(msv.pie, pie1X, pie1Y, null);
     }
 
     public static void updateTouchPoints(MotionEvent event) {
@@ -55,48 +65,60 @@ public class Movement {
     }
 
     public static void stopMovingPlayer() {
-        fingerX = -1;  // what happens if event.getX()when finger is not down
+        fingerX = -1;
         fingerY = -1;
     }
 
+    public static void checkGotPie(MySurfaceView msv) {
+        if (isTherePieContact()) {
+            msv.score++;
+            setRandomPiePostion(msv);
+        }
+    }
+
     public static void checkContactWithEnemy(MySurfaceView msv) {
-        if (isThereContact(msv)) {
-            setPositionValues();
+        if (isThereEnemyContact()) {
+            setPositionValues(msv);
             setPositions(msv);
             msv.lives = msv.lives > 0 ? msv.lives-1 : msv.lives;
         }
     }
 
-    private static boolean isThereContact(MySurfaceView msv) {
-        float xDiff = Movement.rossXMid - Movement.nathanX;
-        float yDiff = Movement.rossYMid - Movement.nathanY;
+    private static boolean isTherePieContact() {
+        float xDiff = rossXMid - pie1X;
+        float yDiff = rossYMid - pie1Y;
+
+        return (xDiff < 80 && xDiff > -80) && (yDiff < 180 && yDiff > -180);
+    }
+
+    private static boolean isThereEnemyContact() {
+        float xDiff = rossXMid - nathanX;
+        float yDiff = rossYMid - nathanY;
 
         return (xDiff < 80 && xDiff > -80) && (yDiff < 180 && yDiff > -180);
     }
 
     private static void updateRossPosition(MySurfaceView msv) {
-        float newRossX = Movement.rossX;
-        float newRossY = Movement.rossY;
-        int xMoveSpeed = 12;
-        int yMoveSpeed = 16;
+        float newRossX = rossX;
+        float newRossY = rossY;
 
         if(fingerX < 0){}
-        else if (fingerX > rossX && (fingerX - rossX) > xMoveSpeed*2) {
-            float newPosition = rossX + xMoveSpeed;
+        else if (fingerX > rossX && (fingerX - rossX) > rossXMoveSpeed*2) {
+            float newPosition = rossX + rossXMoveSpeed;
             newRossX = rossX = newPosition;
         }
-        else if (fingerX < rossX && (rossX - fingerX) > xMoveSpeed*2) {
-            float newPosition = rossX - xMoveSpeed;
+        else if (fingerX < rossX && (rossX - fingerX) > rossXMoveSpeed*2) {
+            float newPosition = rossX - rossXMoveSpeed;
             newRossX = rossX = newPosition;
         }
 
         if (fingerY < 0){}
-        else if (fingerY > rossY && (fingerY - rossY) > yMoveSpeed*2) {
-            float newPosition = rossY + yMoveSpeed;
+        else if (fingerY > rossY && (fingerY - rossY) > rossYMoveSpeed*2) {
+            float newPosition = rossY + rossYMoveSpeed;
             newRossY = rossY = newPosition;
         }
-        else if (fingerY < rossY && (rossY - fingerY) > yMoveSpeed*2) {
-            float newPosition = rossY - yMoveSpeed;
+        else if (fingerY < rossY && (rossY - fingerY) > rossYMoveSpeed*2) {
+            float newPosition = rossY - rossYMoveSpeed;
             newRossY = rossY = newPosition;
         }
 
@@ -116,21 +138,18 @@ public class Movement {
             if (nathanX > rossXMid && (nathanX - rossXMid) > xMoveSpeed*2) {
                 nathanX = nathanX - xMoveSpeed;
                 nathanToUse = msv.nathan_left;
-                subtractPassedNathanRecentlyCounter();
             }
             else if (nathanX < rossXMid && (rossXMid - nathanX) > xMoveSpeed*2) {
                 nathanX = nathanX + xMoveSpeed;
                 nathanToUse = msv.nathan_right;
-                subtractPassedNathanRecentlyCounter();
             }
             if (nathanY > rossYMid && (nathanY - rossYMid) > yMoveSpeed*2) {
                 nathanY = nathanY - yMoveSpeed;
-                subtractPassedNathanRecentlyCounter();
             }
             else if ( nathanY < rossYMid && (rossYMid - nathanY) > yMoveSpeed*2) {
                 nathanY = nathanY + yMoveSpeed;
-                subtractPassedNathanRecentlyCounter();
             }
+            subtractPassedNathanRecentlyCounter();
         }
     }
 
@@ -142,7 +161,6 @@ public class Movement {
     }
 
     private static void checkIfRossHasPassedNathan() {
-
         if (rossXMid > nathanX)
             rossGreaterThanNathan_X = true;
         else if (rossXMid < nathanX)
