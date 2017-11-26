@@ -27,9 +27,12 @@ public class Positions {
         NATHAN_Y = (float)(msv.h * 0.8);
     }
 
-    public static void setRandomPiePostion(MySurfaceView msv) {
+    public static void setRandomPiePosition(MySurfaceView msv) {
         Random random = new Random();
-        pie1X = random.nextInt(msv.w);
-        pie1Y = random.nextInt(msv.h);
+        int pieWidth = msv.pie.getWidth();
+        int pieHeight = msv.pie.getHeight();
+
+        pie1X = random.nextInt(msv.w - (pieWidth*2)) + pieWidth;
+        pie1Y = random.nextInt(msv.h - (pieHeight*2)) + pieHeight;
     }
 }

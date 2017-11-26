@@ -15,7 +15,7 @@ import static com.example.jamesbrowning.countlesspies.Positions.rossX;
 import static com.example.jamesbrowning.countlesspies.Positions.rossXMid;
 import static com.example.jamesbrowning.countlesspies.Positions.rossY;
 import static com.example.jamesbrowning.countlesspies.Positions.rossYMid;
-import static com.example.jamesbrowning.countlesspies.Positions.setRandomPiePostion;
+import static com.example.jamesbrowning.countlesspies.Positions.setRandomPiePosition;
 
 public class Movement {
     private static float fingerX;
@@ -40,7 +40,7 @@ public class Movement {
         rossY = ROSS_Y;
         nathanX = NATHAN_X;
         nathanY = NATHAN_Y;
-        setRandomPiePostion(msv);
+        setRandomPiePosition(msv);
         fingerX = fingerY = -1;
     }
 
@@ -70,9 +70,9 @@ public class Movement {
     }
 
     public static void checkGotPie(MySurfaceView msv) {
-        if (isTherePieContact()) {
+        if (isTherePieContact(msv)) {
             msv.score++;
-            setRandomPiePostion(msv);
+            setRandomPiePosition(msv);
         }
     }
 
@@ -84,18 +84,22 @@ public class Movement {
         }
     }
 
-    private static boolean isTherePieContact() {
+    private static boolean isTherePieContact(MySurfaceView msv) {
+        float pieWidth = msv.pie.getWidth();
+        float pieHeight = msv.pie.getHeight();
         float xDiff = rossXMid - pie1X;
         float yDiff = rossYMid - pie1Y;
 
-        return (xDiff < 80 && xDiff > -80) && (yDiff < 180 && yDiff > -180);
+        return (xDiff < (pieWidth/2) && xDiff > (0-pieWidth/2)) && (yDiff < (pieHeight/2) && yDiff > (0-pieHeight/2));
     }
 
     private static boolean isThereEnemyContact() {
         float xDiff = rossXMid - nathanX;
         float yDiff = rossYMid - nathanY;
+        float nathanWidth = nathanToUse.getWidth();
+        float nathanHeight = nathanToUse.getHeight();
 
-        return (xDiff < 80 && xDiff > -80) && (yDiff < 180 && yDiff > -180);
+        return (xDiff < (nathanWidth/2)  && xDiff > (0-nathanWidth/2)) && (yDiff < (nathanHeight/2) && yDiff > (0-nathanHeight/2));
     }
 
     private static void updateRossPosition(MySurfaceView msv) {
