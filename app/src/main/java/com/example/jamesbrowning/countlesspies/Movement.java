@@ -7,14 +7,16 @@ import static com.example.jamesbrowning.countlesspies.Positions.NATHAN_X;
 import static com.example.jamesbrowning.countlesspies.Positions.NATHAN_Y;
 import static com.example.jamesbrowning.countlesspies.Positions.ROSS_X;
 import static com.example.jamesbrowning.countlesspies.Positions.ROSS_Y;
+import static com.example.jamesbrowning.countlesspies.Positions.getPieMidX;
+import static com.example.jamesbrowning.countlesspies.Positions.getPieMidY;
+import static com.example.jamesbrowning.countlesspies.Positions.getRossMidX;
+import static com.example.jamesbrowning.countlesspies.Positions.getRossMidY;
 import static com.example.jamesbrowning.countlesspies.Positions.nathanX;
 import static com.example.jamesbrowning.countlesspies.Positions.nathanY;
 import static com.example.jamesbrowning.countlesspies.Positions.pie1X;
 import static com.example.jamesbrowning.countlesspies.Positions.pie1Y;
 import static com.example.jamesbrowning.countlesspies.Positions.rossX;
-import static com.example.jamesbrowning.countlesspies.Positions.rossXMid;
 import static com.example.jamesbrowning.countlesspies.Positions.rossY;
-import static com.example.jamesbrowning.countlesspies.Positions.rossYMid;
 import static com.example.jamesbrowning.countlesspies.Positions.setRandomPiePosition;
 
 public class Movement {
@@ -45,7 +47,7 @@ public class Movement {
     }
 
     private static void setPositions(MySurfaceView msv) {
-        msv.canvas.drawBitmap(msv.ross, rossXMid, rossYMid, null);
+        msv.canvas.drawBitmap(msv.ross, rossX, rossY, null);
         msv.canvas.drawBitmap(nathanToUse, nathanX, nathanY, null);
         msv.canvas.drawBitmap(msv.pie, pie1X, pie1Y, null);
     }
@@ -60,7 +62,7 @@ public class Movement {
             updateRossPosition(msv);
             updateNathanPosition(msv);
             setPositions(msv);
-            checkIfRossHasPassedNathan();
+            checkIfRossHasPassedNathan(msv);
         }
     }
 
@@ -77,7 +79,7 @@ public class Movement {
     }
 
     public static void checkContactWithEnemy(MySurfaceView msv) {
-        if (isThereEnemyContact()) {
+        if (isThereEnemyContact(msv)) {
             setPositionValues(msv);
             setPositions(msv);
             msv.lives = msv.lives > 0 ? msv.lives-1 : msv.lives;
@@ -87,70 +89,60 @@ public class Movement {
     private static boolean isTherePieContact(MySurfaceView msv) {
         float pieWidth = msv.pie.getWidth();
         float pieHeight = msv.pie.getHeight();
-        float xDiff = rossXMid - pie1X;
-        float yDiff = rossYMid - pie1Y;
+        float xDiff = getRossMidX(msv) - getPieMidX(msv);
+        float yDiff = getRossMidY(msv) - getPieMidY(msv);
 
         return (xDiff < (pieWidth/2) && xDiff > (0-pieWidth/2)) && (yDiff < (pieHeight/2) && yDiff > (0-pieHeight/2));
     }
 
-    private static boolean isThereEnemyContact() {
-        float xDiff = rossXMid - nathanX;
-        float yDiff = rossYMid - nathanY;
+    private static boolean isThereEnemyContact(MySurfaceView msv) {
         float nathanWidth = nathanToUse.getWidth();
         float nathanHeight = nathanToUse.getHeight();
+        float xDiff = rossX - nathanX;
+        float yDiff = rossY - nathanY;
 
         return (xDiff < (nathanWidth/2)  && xDiff > (0-nathanWidth/2)) && (yDiff < (nathanHeight/2) && yDiff > (0-nathanHeight/2));
     }
 
     private static void updateRossPosition(MySurfaceView msv) {
-        float newRossX = rossX;
-        float newRossY = rossY;
-
-        if(fingerX < 0){}
-        else if (fingerX > rossX && (fingerX - rossX) > rossXMoveSpeed*2) {
-            float newPosition = rossX + rossXMoveSpeed;
-            newRossX = rossX = newPosition;
+        if(fingerX < 0){return;}
+        else if (fingerX > getRossMidX(msv) && (fingerX - getRossMidX(msv)) > rossXMoveSpeed*2) {
+            rossX = rossX + rossXMoveSpeed;
         }
-        else if (fingerX < rossX && (rossX - fingerX) > rossXMoveSpeed*2) {
-            float newPosition = rossX - rossXMoveSpeed;
-            newRossX = rossX = newPosition;
+        else if (fingerX < getRossMidX(msv) && (getRossMidX(msv) - fingerX) > rossXMoveSpeed*2) {
+            rossX = rossX - rossXMoveSpeed;
         }
 
-        if (fingerY < 0){}
-        else if (fingerY > rossY && (fingerY - rossY) > rossYMoveSpeed*2) {
-            float newPosition = rossY + rossYMoveSpeed;
-            newRossY = rossY = newPosition;
+        if (fingerY < 0){return;}
+        else if (fingerY > getRossMidY(msv) && (fingerY - getRossMidY(msv)) > rossYMoveSpeed*2) {
+            rossY = rossY + rossYMoveSpeed;
         }
-        else if (fingerY < rossY && (rossY - fingerY) > rossYMoveSpeed*2) {
-            float newPosition = rossY - rossYMoveSpeed;
-            newRossY = rossY = newPosition;
+        else if (fingerY < getRossMidY(msv) && (getRossMidY(msv) - fingerY) > rossYMoveSpeed*2) {
+            rossY = rossY - rossYMoveSpeed;
         }
-
-        rossXMid = newRossX - (msv.ross.getWidth()/2);
-        rossYMid = newRossY - (msv.ross.getHeight()/2);
     }
 
     private static void updateNathanPosition(MySurfaceView msv) {
         int xMoveSpeed = 2;
         int yMoveSpeed = 3;
 
-        checkIfRossHasPassedNathan();
+        checkIfRossHasPassedNathan(msv);
 
         if (delayNathanCounter > 0) {
              delayNathanCounter--;
         } else {
-            if (nathanX > rossXMid && (nathanX - rossXMid) > xMoveSpeed*2) {
+            if (nathanX > rossX && (nathanX - rossX) > xMoveSpeed*2) {
                 nathanX = nathanX - xMoveSpeed;
                 nathanToUse = msv.nathan_left;
             }
-            else if (nathanX < rossXMid && (rossXMid - nathanX) > xMoveSpeed*2) {
+            else if (nathanX < rossX && (rossX - nathanX) > xMoveSpeed*2) {
                 nathanX = nathanX + xMoveSpeed;
                 nathanToUse = msv.nathan_right;
             }
-            if (nathanY > rossYMid && (nathanY - rossYMid) > yMoveSpeed*2) {
+            if (nathanY > rossY && (nathanY - rossY) > yMoveSpeed*2) {
                 nathanY = nathanY - yMoveSpeed;
             }
-            else if ( nathanY < rossYMid && (rossYMid - nathanY) > yMoveSpeed*2) {
+            else if ( nathanY < rossY && (rossY - nathanY) > yMoveSpeed*2) {
                 nathanY = nathanY + yMoveSpeed;
             }
             subtractPassedNathanRecentlyCounter();
@@ -164,14 +156,14 @@ public class Movement {
             passedNathanRecentlyCounter = 0;
     }
 
-    private static void checkIfRossHasPassedNathan() {
-        if (rossXMid > nathanX)
+    private static void checkIfRossHasPassedNathan(MySurfaceView msv) {
+        if (getRossMidX(msv) > nathanX)
             rossGreaterThanNathan_X = true;
-        else if (rossXMid < nathanX)
+        else if (getRossMidX(msv) < nathanX)
             rossGreaterThanNathan_X = false;
-        if (rossYMid > nathanY)
+        if (getRossMidY(msv) > nathanY)
             rossGreaterThanNathan_Y = true;
-        else if (rossYMid < nathanY)
+        else if (getRossMidY(msv) < nathanY)
             rossGreaterThanNathan_Y = false;
 
         if (rossGreaterThanNathan_X != preRossGreaterThanNathan_X ||

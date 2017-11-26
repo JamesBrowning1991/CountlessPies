@@ -16,9 +16,9 @@ public class IntroMovement {
 
     public static boolean doIntro(MySurfaceView msv) {
         if (firstRun) {
-            rossX = -200;
+            rossX = 0-msv.ross.getWidth();
             rossY = ROSS_Y;
-            nathanX = msv.canvas.getWidth() + 100;
+            nathanX = msv.w + 1;
             nathanY = NATHAN_Y;
             firstRun = false;
         }
@@ -32,10 +32,7 @@ public class IntroMovement {
         else
             nathanInPlace = true;
 
-        float rossXMid = rossX - (msv.ross.getWidth()/2);
-        float rossYMid = rossY - (msv.ross.getHeight()/2);
-
-        msv.canvas.drawBitmap(msv.ross, rossXMid, rossYMid, null); // not ideal because can't set ross' location accurately, need to not use mid value
+        msv.canvas.drawBitmap(msv.ross, rossX, rossY, null);
         msv.canvas.drawBitmap(msv.nathan_left, nathanX, nathanY, null);
 
         return !(rossInPlace && nathanInPlace);

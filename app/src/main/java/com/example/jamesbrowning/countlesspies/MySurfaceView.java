@@ -74,7 +74,7 @@ public class MySurfaceView extends SurfaceView implements Runnable {
                 doIntro = IntroMovement.doIntro(this);
             }
             else {
-                isGameOver();
+                isGameOver();  // might need to re-arrange here to stop flicker on game over
                 Movement.updateMovement(this);
                 Movement.checkGotPie(this);
                 Movement.checkContactWithEnemy(this);

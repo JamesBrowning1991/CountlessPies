@@ -11,8 +11,6 @@ public class Positions {
 
     public static float rossX;
     public static float rossY;
-    public static float rossXMid;
-    public static float rossYMid;
 
     public static float nathanX;
     public static float nathanY;
@@ -21,7 +19,7 @@ public class Positions {
     public static float pie1Y;
 
     public static void setStartingPositions(MySurfaceView msv) {
-        ROSS_X = (float)(msv.w * 0.2);
+        ROSS_X = (float)(msv.w * 0.1);
         ROSS_Y = (float)(msv.h * 0.15);
         NATHAN_X = (float)(msv.w * 0.7);
         NATHAN_Y = (float)(msv.h * 0.8);
@@ -34,5 +32,21 @@ public class Positions {
 
         pie1X = random.nextInt(msv.w - (pieWidth*2)) + pieWidth;
         pie1Y = random.nextInt(msv.h - (pieHeight*2)) + pieHeight;
+    }
+
+    public static float getRossMidX(MySurfaceView msv) {
+        return rossX + (msv.ross.getWidth()/2);
+    }
+
+    public static float getRossMidY(MySurfaceView msv) {
+        return rossY + (msv.ross.getHeight()/2);
+    }
+
+    public static float getPieMidX(MySurfaceView msv) {
+        return pie1X + (msv.pie.getWidth()/2);
+    }
+
+    public static float getPieMidY(MySurfaceView msv) {
+        return pie1Y + (msv.pie.getHeight()/2);
     }
 }
