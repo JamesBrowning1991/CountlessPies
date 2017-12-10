@@ -1,13 +1,18 @@
 package com.example.jamesbrowning.countlesspies;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.InputType;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+import android.widget.EditText;
 
 public class MySurfaceView extends SurfaceView implements Runnable {
 
@@ -73,8 +78,11 @@ public class MySurfaceView extends SurfaceView implements Runnable {
             if (doIntro) {
                 doIntro = IntroMovement.doIntro(this);
             }
+            else if (isGameOver()){
+                gameOver = true;
+                drawGameOver();
+            }
             else {
-                isGameOver();  // might need to re-arrange here to stop flicker on game over
                 Movement.updateMovement(this);
                 Movement.checkGotPie(this);
                 Movement.checkContactWithEnemy(this);
@@ -114,11 +122,8 @@ public class MySurfaceView extends SurfaceView implements Runnable {
         canvas.drawText("Game Over", xPos, yPos, paint);
     }
 
-    private void isGameOver() {
-        if (lives <= 0) {
-            gameOver = true;
-            drawGameOver();
-        }
+    private boolean isGameOver() {
+        return lives <= 0;
     }
 
     public void pause() {

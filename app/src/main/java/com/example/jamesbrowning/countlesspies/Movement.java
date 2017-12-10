@@ -80,9 +80,11 @@ public class Movement {
 
     public static void checkContactWithEnemy(MySurfaceView msv) {
         if (isThereEnemyContact(msv)) {
-            setPositionValues(msv);
-            setPositions(msv);
             msv.lives = msv.lives > 0 ? msv.lives-1 : msv.lives;
+            if (msv.lives > 0){
+                setPositionValues(msv);
+                setPositions(msv);
+            }
         }
     }
 
