@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,8 +24,11 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         dbHandler = new MyDBHandler(this, null, null, 1);
+
+        super.onCreate(savedInstanceState);
+        //Remove title bar
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
         launchGameButton = (Button) findViewById(R.id.launchGameButton);
@@ -51,7 +55,9 @@ public class MainActivity extends Activity {
     }
 
     private void initialiseScoreText() {
-        displayScores.setText(dbHandler.databaseToString());
+        String dbScores = dbHandler.databaseToString();
+        String scoresText = dbScores.isEmpty() ? "No Scores" : dbScores;
+        displayScores.setText("Highscores:\n " + scoresText);
     }
 
     @Override

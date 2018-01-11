@@ -145,6 +145,6 @@ public class MySurfaceView extends SurfaceView implements Runnable {
     }
 
     private void setBackground() {
-        canvas.drawARGB(255, 139, 0, 139);
+        canvas.drawARGB(255, 48, 16, 36);
     }
 }
