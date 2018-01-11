@@ -69,6 +69,7 @@ public class MySurfaceView extends SurfaceView implements Runnable {
                 canvas = surfaceHolder.lockCanvas();
                 surfaceHolder.unlockCanvasAndPost(canvas);
                 Movement.setPositionValues(this);
+                Movement.setMovementSpeeds(this);
                 beforeCanvasInitialised = false;
             }
 

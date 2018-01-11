@@ -3,21 +3,7 @@ package com.example.jamesbrowning.countlesspies;
 import android.graphics.Bitmap;
 import android.view.MotionEvent;
 
-import static com.example.jamesbrowning.countlesspies.Positions.NATHAN_X;
-import static com.example.jamesbrowning.countlesspies.Positions.NATHAN_Y;
-import static com.example.jamesbrowning.countlesspies.Positions.ROSS_X;
-import static com.example.jamesbrowning.countlesspies.Positions.ROSS_Y;
-import static com.example.jamesbrowning.countlesspies.Positions.getPieMidX;
-import static com.example.jamesbrowning.countlesspies.Positions.getPieMidY;
-import static com.example.jamesbrowning.countlesspies.Positions.getRossMidX;
-import static com.example.jamesbrowning.countlesspies.Positions.getRossMidY;
-import static com.example.jamesbrowning.countlesspies.Positions.nathanX;
-import static com.example.jamesbrowning.countlesspies.Positions.nathanY;
-import static com.example.jamesbrowning.countlesspies.Positions.pie1X;
-import static com.example.jamesbrowning.countlesspies.Positions.pie1Y;
-import static com.example.jamesbrowning.countlesspies.Positions.rossX;
-import static com.example.jamesbrowning.countlesspies.Positions.rossY;
-import static com.example.jamesbrowning.countlesspies.Positions.setRandomPiePosition;
+import static com.example.jamesbrowning.countlesspies.Positions.*;
 
 public class Movement {
     private static float fingerX;
@@ -25,8 +11,8 @@ public class Movement {
 
     private static Bitmap nathanToUse;
 
-    private static int rossXMoveSpeed = 12;
-    private static int rossYMoveSpeed = 16;
+    private static int rossXMoveSpeed;
+    private static int rossYMoveSpeed;
 
     public static boolean preRossGreaterThanNathan_X;
     public static boolean preRossGreaterThanNathan_Y;
@@ -44,6 +30,12 @@ public class Movement {
         nathanY = NATHAN_Y;
         setRandomPiePosition(msv);
         fingerX = fingerY = -1;
+    }
+
+    public static void setMovementSpeeds(MySurfaceView msv) {
+        //todo: make speed relative to canvas size
+        rossXMoveSpeed = 30;
+        rossYMoveSpeed = 36;
     }
 
     private static void setPositions(MySurfaceView msv) {
@@ -125,8 +117,9 @@ public class Movement {
     }
 
     private static void updateNathanPosition(MySurfaceView msv) {
-        int xMoveSpeed = 2;
-        int yMoveSpeed = 3;
+        int speedBoost = msv.score < 10 ? 1 : Integer.parseInt(String.valueOf(msv.score).substring(0,1))+1;
+        int xMoveSpeed = 2 * speedBoost;
+        int yMoveSpeed = 2 * speedBoost;
 
         checkIfRossHasPassedNathan(msv);
 

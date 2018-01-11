@@ -43,8 +43,10 @@ public class GameplayActivity extends Activity {
     public void onBackPressed() {
         Intent resultIntent = new Intent();
         resultIntent.putExtra("score", msv.score);
-        setResult(Activity.RESULT_OK, resultIntent);
+        int resultCode = msv.gameOver ? Activity.RESULT_OK : Activity.RESULT_CANCELED; // if not game over then dialog won't display
+        setResult(resultCode, resultIntent);
         finish();
+        overridePendingTransition(R.transition.activity_fade_out, R.transition.activity_fade_in);
     }
 
     @Override

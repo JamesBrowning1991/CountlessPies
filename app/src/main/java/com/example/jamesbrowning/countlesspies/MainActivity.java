@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(MainActivity.this, GameplayActivity.class);
                 startActivityForResult(myIntent, 666);
+                overridePendingTransition(R.transition.activity_fade_out, R.transition.activity_fade_in);
             }
         });
 
